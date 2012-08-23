@@ -1,0 +1,41 @@
+build.sh: configure and build a kernel.
+
+Working dir layout:
+./
+ +-builds/		# Here built kernels are located
+ |       +-config-1/
+ |       +-...
+ |       `-config-n/
+ +-source/		# Linux tree to build
+ +-toolchains/		# Compilers
+ |
+ +-build.sh		# This script
+ +-config-1		# Kernel configuration
+ +-...
+ `-config-n
+
+The script is given a list of configurations to build, it re-configures build directory for that configuration and builds it.
+
+
+
+test-qemu.sh: test a kernel using expect + QEMU.
+
+Working dir layout:
+./
+ +-builds/			# Here built kernels are located
+ |       +-config-1/
+ |       +-...
+ |       `-config-n/
+ +-qemu/			# QEMU directory (or symlink)
+ |     +-qemu-system-xtensa	# QEMU for LE xtensa cores
+ |     `-qemu-system-xtensaeb	# QEMU for BE xtensa cores
+ |
+ +-config-1			# Kernel configuration
+ +-...
+ +-config-n
+ |
+ +-expect-default		# Default expect script
+ `-test-qemu.sh			# This script
+
+The script is given a list of configurations to test and a test scenario, it runs pre-built kernels in QEMU and talks to it
+via expect according to test scenario.

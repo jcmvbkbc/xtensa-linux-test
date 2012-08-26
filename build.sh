@@ -62,7 +62,13 @@ done
 export ARCH=xtensa
 SRC=$(readlink -f source)
 O_BASE=$(readlink -f builds)
+LOG_BASE=$(readlink -f logs)
 mkdir -p "$O_BASE"
+mkdir -p "$LOG_BASE"
+
+for CONFIG in "$@" ; do
+	rm -f "$LOG_BASE"/{BUILD,OK,FAIL}"-$CONFIG"
+done
 
 for CONFIG in "$@" ; do
 	O="$O_BASE/$CONFIG"
@@ -78,9 +84,12 @@ for CONFIG in "$@" ; do
 		[ -f "$O/.config" ] || cp "$CONFIG" "$O/.config"
 		make -C "$SRC" O="$O" oldconfig
 	fi
-	make -C "$SRC" ${make_args[@]} O="$O" "${pass_args[@]}" all 2>&1 | tee "$O/build.log"
+	make -C "$SRC" ${make_args[@]} O="$O" "${pass_args[@]}" all 2>&1 | tee "$O/build.log" "$LOG_BASE/BUILD-$CONFIG"
 	RC=${PIPESTATUS[0]}
-	if [ $RC != 0 ] ; then
+	if [ $RC = 0 ] ; then
+		mv "$LOG_BASE/BUILD-$CONFIG" "$LOG_BASE/OK-$CONFIG"
+	else
+		mv "$LOG_BASE/BUILD-$CONFIG" "$LOG_BASE/FAIL-$CONFIG"
 		[ -n "$keep" ] || exit $RC
 	fi
 done

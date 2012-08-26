@@ -7,6 +7,10 @@ Working dir layout:
  |       +-...
  |       `-config-n/
  +-source/		# Linux tree to build
+ +-logs/		# Build logs
+ |     +-BUILD-config	# Currently being built
+ |     +-FAIL-config	# Failed build log
+ |     `-OK-config	# Successfull build log
  +-toolchains/		# Compilers
  |
  +-build.sh		# This script

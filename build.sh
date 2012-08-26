@@ -78,5 +78,9 @@ for CONFIG in "$@" ; do
 		[ -f "$O/.config" ] || cp "$CONFIG" "$O/.config"
 		make -C "$SRC" O="$O" oldconfig
 	fi
-	{ make -C "$SRC" ${make_args[@]} O="$O" "${pass_args[@]}" all || [ -n "$keep" ] ; } 2>&1 | tee "$O/build.log"
+	make -C "$SRC" ${make_args[@]} O="$O" "${pass_args[@]}" all 2>&1 | tee "$O/build.log"
+	RC=${PIPESTATUS[0]}
+	if [ $RC != 0 ] ; then
+		[ -n "$keep" ] || exit $RC
+	fi
 done

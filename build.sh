@@ -11,6 +11,7 @@ Usage: build.sh [OPTION]... [VAR=VAL]... [--][CONFIG]...
 				(may be file name or predefined kernel config name).
 				CONFIGs will be updated.
 	-k, --keep		keep building CONFIGs even if some of them fail.
+	-r, --reconfigure	run interactive configure for each CONFIG
 
 	VAR=VAL			pass build modifiers to the kernel make (e.g. V=1).
 				If VAR is MAKE_ARGS, VALs are accumulated and passed
@@ -39,6 +40,10 @@ while : ; do
 			;;
 		-k|--keep)
 			keep=1
+			shift
+			;;
+		-r|--reconfigure)
+			reconfigure=1
 			shift
 			;;
 		MAKE_ARGS=*)
@@ -76,6 +81,7 @@ for CONFIG in "$@" ; do
 	export CROSS_COMPILE=$(readlink -f "toolchains/build-xtensa-$CORE-elf/root/bin/xtensa-$CORE-elf-")
 	[ -z "$force" ] || rm -rf "$O"
 	mkdir -p "$O"
+	[ -n "$reconfigure" ] && interactive_template="$CONFIG"
 	if [ -n "$interactive_template" ] ; then
 		[ -f "$interactive_template" ] && cp "$interactive_template" "$O/.config" || make -C "$SRC" O="$O" "$interactive_template"
 		make -C "$SRC" O="$O" menuconfig

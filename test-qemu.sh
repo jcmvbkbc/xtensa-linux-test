@@ -60,6 +60,9 @@ for CONFIG in "$@" ; do
 	CORE=${CONFIG/*-/}
 	BASE_CONFIG=${CONFIG%-$CORE}
 	MACHINE=${BASE_CONFIG/*-/}
+	BASE_CONFIG=${BASE_CONFIG%-$MACHINE}
+	EXPECT_DEFAULT=expect-${BASE_CONFIG/*-/}
+	[ -f ${EXPECT_DEFAULT} ] || EXPECT_DEFAULT=expect-default
 	expect -c "spawn \"${qemu[$CORE]}\" -cpu $CORE -M $MACHINE -monitor null -nographic ${qemu_args[$MACHINE]} -kernel \"$O/arch/xtensa/boot/Image.elf\"" \
-       		"${expect_script:-expect-default}" || [ -n "$keep" ]
+		"${expect_script:-$EXPECT_DEFAULT}" || [ -n "$keep" ]
 done

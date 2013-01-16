@@ -1,0 +1,31 @@
+set timeout 30
+
+expect {
+timeout	{exit 1}
+login:	{send "root\r"}
+}
+
+expect {
+timeout	{exit 1}
+]#	{send "cd ltp-\t\r"}
+}
+
+expect {
+timeout	{exit 1}
+]#	{send "echo 16 > /proc/sys/kernel/msgmni\r"}
+}
+
+expect {
+timeout	{exit 1}
+]#	{send "./runltp -p -q\r"}
+}
+
+set timeout 300
+
+expect {
+PASS	{exp_continue}
+FAIL	{exp_continue}
+INFO	{exp_continue}
+timeout	{exit 1}
+]#
+}

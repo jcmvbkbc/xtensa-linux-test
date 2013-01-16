@@ -1,0 +1,21 @@
+set timeout 30
+
+expect {
+timeout	{exit 1}
+login:	{send "root\r"}
+}
+
+expect {
+timeout	{exit 1}
+]#	{send "cat /proc/cpuinfo\r"}
+}
+
+expect {
+timeout	{exit 1}
+]#	{send "cat /proc/self/maps\r"}
+}
+
+expect {
+timeout	{exit 1}
+]#
+}

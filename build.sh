@@ -88,7 +88,7 @@ done
 for CONFIG in "$@" ; do
 	O="$O_BASE/$CONFIG"
 	CORE=${CONFIG/*-/}
-	export CROSS_COMPILE=$(readlink -f "toolchains/build-xtensa-$CORE-elf/root/bin/xtensa-$CORE-elf-")
+	export CROSS_COMPILE=$(readlink -f "toolchains/build-$CORE/root/bin/xtensa-$CORE-elf-")
 	[ -z "$force" ] || rm -rf "$O"
 	mkdir -p "$O"
 	[ -n "$reconfigure" ] && template="$CONFIG"

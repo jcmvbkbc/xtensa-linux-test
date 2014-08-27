@@ -11,6 +11,10 @@ Usage: build.sh [OPTION]... [VAR=VAL]... [--][CONFIG]...
 				(may be file name or predefined kernel config name).
 				CONFIGs will be updated.
 	-k, --keep		keep building CONFIGs even if some of them fail.
+	-n TEMPLATE, --non-interactive TEMPLATE
+				configure using TEMPLATE as initial configuration
+				(may be file name or predefined kernel config name).
+				CONFIGs will be updated.
 	-r, --reconfigure	run interactive configure for each CONFIG
 
 	VAR=VAL			pass build modifiers to the kernel make (e.g. V=1).
@@ -35,15 +39,21 @@ while : ; do
 			exit
 			;;
 		-i|--interactive)
-			interactive_template="$2"
+			template="$2"
+			interactive=1
 			shift 2
 			;;
 		-k|--keep)
 			keep=1
 			shift
 			;;
+		-n|--non-interactive)
+			template="$2"
+			shift 2
+			;;
 		-r|--reconfigure)
 			reconfigure=1
+			interactive=1
 			shift
 			;;
 		MAKE_ARGS=*)
@@ -81,10 +91,10 @@ for CONFIG in "$@" ; do
 	export CROSS_COMPILE=$(readlink -f "toolchains/build-xtensa-$CORE-elf/root/bin/xtensa-$CORE-elf-")
 	[ -z "$force" ] || rm -rf "$O"
 	mkdir -p "$O"
-	[ -n "$reconfigure" ] && interactive_template="$CONFIG"
-	if [ -n "$interactive_template" ] ; then
-		[ -f "$interactive_template" ] && cp "$interactive_template" "$O/.config" || make -C "$SRC" O="$O" "$interactive_template"
-		make -C "$SRC" O="$O" menuconfig
+	[ -n "$reconfigure" ] && template="$CONFIG"
+	if [ -n "$template" ] ; then
+		[ -f "$template" ] && cp "$template" "$O/.config" || make -C "$SRC" O="$O" "${pass_args[@]}" "$template"
+		[ -n "$interactive" ] && make -C "$SRC" O="$O" menuconfig
 		cp "$O/.config" "$CONFIG"
 	else
 		[ -f "$O/.config" ] || cp "$CONFIG" "$O/.config"

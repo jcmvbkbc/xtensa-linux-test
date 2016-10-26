@@ -1,0 +1,2 @@
+IF_CONFIG="192.168.129.1 up"
+CONFIG=call0-kc705-test_kc705

@@ -51,9 +51,9 @@ for QEMU_BIN in qemu-system-xtensa qemu-system-xtensaeb ; do
 	done
 done
 
-qemu_args["sim"]="-semihosting -serial null"
-qemu_args["lx60"]="-serial mon:stdio -net tap,ifname=`cat interface`,script=no,downscript=no -net nic,model=open_eth"
-qemu_args["kc705"]="-serial mon:stdio -net tap,ifname=`cat interface`,script=no,downscript=no -net nic,model=open_eth"
+qemu_args=(["sim"]="-semihosting -serial null"
+           ["lx60"]="-serial mon:stdio -net tap,ifname=`cat interface`,script=no,downscript=no -net nic,model=open_eth"
+           ["kc705"]="-serial mon:stdio -net tap,ifname=`cat interface`,script=no,downscript=no -net nic,model=open_eth -m 1G")
 
 O_BASE=$(readlink -f builds)
 

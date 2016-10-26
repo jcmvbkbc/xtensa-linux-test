@@ -16,6 +16,7 @@ Usage: build.sh [OPTION]... [VAR=VAL]... [--][CONFIG]...
 				(may be file name or predefined kernel config name).
 				CONFIGs will be updated.
 	-r, --reconfigure	run interactive configure for each CONFIG
+	-c			don't run build step for each CONFIG, only configure
 
 	VAR=VAL			pass build modifiers to the kernel make (e.g. V=1).
 				If VAR is MAKE_ARGS, VALs are accumulated and passed
@@ -30,6 +31,10 @@ declare -a make_args pass_args
 
 while : ; do
 	case "$1" in
+		-c)
+			config_only=1
+			shift
+			;;
 		-f|--force)
 			force=1
 			shift
@@ -100,6 +105,7 @@ for CONFIG in "$@" ; do
 		[ -f "$O/.config" ] || cp "$CONFIG" "$O/.config"
 		make -C "$SRC" O="$O" oldconfig
 	fi
+	[ -z "$config_only" ] || continue
 	make -C "$SRC" ${make_args[@]} O="$O" "${pass_args[@]}" all 2>&1 | tee "$O/build.log" "$LOG_BASE/BUILD-$CONFIG"
 	RC=${PIPESTATUS[0]}
 	if [ $RC = 0 ] ; then

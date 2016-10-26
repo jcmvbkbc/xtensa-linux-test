@@ -1,4 +1,4 @@
-set timeout 30
+set timeout 120
 
 expect {
 timeout	{exit 1}
@@ -7,15 +7,15 @@ login:	{send "root\r"}
 
 expect {
 timeout	{exit 1}
-]#	{send "cat /proc/cpuinfo\r"}
+"# "	{send "cat /proc/cpuinfo\r"}
 }
 
 expect {
 timeout	{exit 1}
-]#	{send "cat /proc/self/maps\r"}
+"# "	{send "cat /proc/self/maps\r"}
 }
 
 expect {
 timeout	{exit 1}
-]#
+"# "
 }

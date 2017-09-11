@@ -20,14 +20,16 @@ Usage: build.sh [OPTION]... [VAR=VAL]... [--][CONFIG]...
 
 	VAR=VAL			pass build modifiers to the kernel make (e.g. V=1).
 				If VAR is MAKE_ARGS, VALs are accumulated and passed
-				to the kernel make (e.g. MAKE_ARGS="-k -j").
+				as options to the kernel make (e.g. MAKE_ARGS="-k -j").
+				If VAR is MAKE_TARGET, VALs are accumulated and passed
+				as targets the kernel make (e.g. MAKE_TARGET="uImage").
 
 	CONFIG			configuration to build. The name has a form PREFIX-CORE,
 				where CORE is core variant (e.g. fsf or dc232b).
 EOF
 }
 
-declare -a make_args pass_args
+declare -a make_args make_target pass_args
 
 while : ; do
 	case "$1" in
@@ -65,6 +67,10 @@ while : ; do
 			make_args+=(${1#MAKE_ARGS=})
 			shift
 			;;
+		MAKE_TARGET=*)
+			make_target+=(${1#MAKE_TARGET=})
+			shift
+			;;
 		*=*)
 			pass_args+=("$1")
 			shift
@@ -86,6 +92,8 @@ LOG_BASE=$(readlink -f logs)
 mkdir -p "$O_BASE"
 mkdir -p "$LOG_BASE"
 
+[ ${#make_target[@]} -gt 0 ] || make_target=(all)
+
 for CONFIG in "$@" ; do
 	rm -f "$LOG_BASE"/{BUILD,OK,FAIL}"-$CONFIG"
 done
@@ -106,7 +114,7 @@ for CONFIG in "$@" ; do
 		make -C "$SRC" O="$O" oldconfig
 	fi
 	[ -z "$config_only" ] || continue
-	make -C "$SRC" ${make_args[@]} O="$O" "${pass_args[@]}" all 2>&1 | tee "$O/build.log" "$LOG_BASE/BUILD-$CONFIG"
+	make -C "$SRC" ${make_args[@]} O="$O" "${pass_args[@]}" ${make_target[@]} 2>&1 | tee "$O/build.log" "$LOG_BASE/BUILD-$CONFIG"
 	RC=${PIPESTATUS[0]}
 	if [ $RC = 0 ] ; then
 		mv "$LOG_BASE/BUILD-$CONFIG" "$LOG_BASE/OK-$CONFIG"

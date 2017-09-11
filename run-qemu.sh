@@ -39,13 +39,13 @@ if [ $# -gt 0 ] ; then
 fi
 
 if [ -n "${IF_CONFIG}" ] ; then
-	IF=$(sudo tunctl -u jcmvbkbc -p -b)
-	trap "tunctl -d ${IF}" EXIT
+	IF=$(sudo /usr/sbin/tunctl -u jcmvbkbc -b)
+	trap "/usr/sbin/tunctl -d ${IF}" EXIT
 	sudo ifconfig ${IF} ${IF_CONFIG}
 
 	touch ${RUN_CONFIG}/dhcpd.leases ||:
 	sudo dhcpd -f -d -cf ${RUN_CONFIG}/dhcpd.conf -lf ${RUN_CONFIG}/dhcpd.leases --no-pid ${IF} >& /dev/null &
-	trap "sudo kill $! ; tunctl -d ${IF}" EXIT
+	trap "sudo kill $! ; /usr/sbin/tunctl -d ${IF}" EXIT
 fi
 
 declare -A qemu qemu_args core_map

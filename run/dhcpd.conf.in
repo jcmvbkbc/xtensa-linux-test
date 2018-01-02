@@ -7,7 +7,7 @@ subnet ${NET}.0 netmask 255.255.255.0 {
 
         option domain-name-servers      192.168.248.21;
 
-        option root-path                "${NET}.1:/tftpboot/tensilica/rootfs/${ROOTFS},vers=3,tcp";
+        option root-path                "${NET}.1:/tftpboot/tensilica/rootfs/${ROOTFS}${NFS_MOUNT_OPTIONS}";
 
         range dynamic-bootp ${NET}.128 ${NET}.128;
         default-lease-time 21600;

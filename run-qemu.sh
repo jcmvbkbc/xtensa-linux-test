@@ -41,6 +41,7 @@ case "$1" in
 		;;
 esac
 
+[ -f `dirname "$0"`/run-qemu.conf.local ] && . `dirname "$0"`/run-qemu.conf.local
 . ${RUN_CONFIG}/config
 
 if [ $# -gt 0 ] ; then

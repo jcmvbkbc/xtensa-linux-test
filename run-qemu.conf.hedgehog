@@ -1,0 +1,1 @@
+NFS_MOUNT_OPTIONS=,vers=3,tcp

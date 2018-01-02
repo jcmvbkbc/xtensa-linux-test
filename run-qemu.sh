@@ -17,6 +17,13 @@ Usage: run-qemu.sh -h
 EOF
 }
 
+subst()
+{
+	eval "cat <<EOF
+`cat \"$1\"`
+EOF"
+}
+
 cleanup()
 {
 	[ $1 -gt 0 ] && sudo kill `cat ${RUN_CONFIG}/dhcpd.pid`
@@ -52,6 +59,7 @@ if [ -n "${IF_CONFIG}" ] ; then
 	IF=$(sudo tunctl -u jcmvbkbc -b)
 	trap "cleanup 0" EXIT
 	sudo ifconfig ${IF} ${IF_CONFIG}
+	[ -f ${RUN_CONFIG}/dhcpd.conf.in ] && subst ${RUN_CONFIG}/dhcpd.conf.in > ${RUN_CONFIG}/dhcpd.conf
 	rm -f ${RUN_CONFIG}/dhcpd.leases && touch ${RUN_CONFIG}/dhcpd.leases
 	sudo dhcpd -cf ${RUN_CONFIG}/dhcpd.conf -lf ${RUN_CONFIG}/dhcpd.leases -pf ${RUN_CONFIG}/dhcpd.pid ${IF}
 	trap "cleanup 1" EXIT

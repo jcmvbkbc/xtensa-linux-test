@@ -1,0 +1,15 @@
+ddns-update-style interim;
+ignore client-updates;
+
+subnet ${NET}.0 netmask 255.255.255.0 {
+        option routers                  ${NET}.1;
+        option subnet-mask              255.255.255.0;
+
+        option domain-name-servers      192.168.248.21;
+
+        option root-path                "${NET}.1:/tftpboot/tensilica/rootfs/${ROOTFS},vers=3,tcp";
+
+        range dynamic-bootp ${NET}.128 ${NET}.128;
+        default-lease-time 21600;
+        max-lease-time 43200;
+}

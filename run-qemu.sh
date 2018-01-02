@@ -79,6 +79,6 @@ MACHINE=${BASE_CONFIG/*-/}
 BASE_CONFIG=${BASE_CONFIG%-$MACHINE}
 ${qemu[$CORE]} -cpu $CORE -M $MACHINE -pidfile ${RUN_CONFIG}/pid \
 	-monitor null -nographic ${qemu_args[$MACHINE]} \
-	-kernel "$O/arch/xtensa/boot/Image.elf" "$@"
+	-kernel "$O/arch/xtensa/boot/${KERNEL_IMAGE:-Image.elf}" "$@"
 
 rm -f ${RUN_CONFIG}/pid

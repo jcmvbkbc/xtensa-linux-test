@@ -3,13 +3,17 @@
 print_help()
 {
 	cat <<EOF
-Usage: run-qemu.sh -h	
-       run-qemu.sh RUN_CONFIG
+Usage: run-qemu.sh -h
+       run-qemu.sh RUN_CONFIG [KERNEL_CONFIG] [-- [QEMU options]]
 	-h, --help		this help.
 
 	RUN_CONFIG		configuration to run. It's the path to a directory with config file
 				and dhcpd.conf, PID file is created there when the config is running
 				(used by the corresponding kill script).
+
+	KERNEL_CONFIG		kernel configuration to use. It's a name under build/ subdirectory
+				where the kernel is built and also it's interpreted as *-MACHINE-CORE
+				to select QEMU machine and CPU.
 EOF
 }
 

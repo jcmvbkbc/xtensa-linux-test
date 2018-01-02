@@ -56,7 +56,7 @@ if [ $# -gt 0 ] ; then
 fi
 
 if [ -n "${IF_CONFIG}" ] ; then
-	IF=$(sudo tunctl -u jcmvbkbc -b)
+	IF=$(sudo tunctl -u $USER -b)
 	trap "cleanup 0" EXIT
 	sudo ifconfig ${IF} ${IF_CONFIG}
 	[ -f ${RUN_CONFIG}/dhcpd.conf.in ] && subst ${RUN_CONFIG}/dhcpd.conf.in > ${RUN_CONFIG}/dhcpd.conf
